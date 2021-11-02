@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "database-systems"
+version = "0.0.1"
+description = ""
+authors = ["Relectric Car Team <info@teamrelectric.ca>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9.1"
+fastapi = "^0.70.0"
+motor = "^2.5.1"
+black = "^21.9b0"
+isort = "^5.9.3"
+python-dotenv = "^0.19.1"
+uvicorn = "^0.15.0"
