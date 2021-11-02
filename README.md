@@ -40,18 +40,32 @@ docker build -f Mongo.Dockerfile -t relectric-db .
 ```
 
 
-### Running the containers
-Containers will need to be run after building the images or after being stopped.
+### Creating or Running the containers
+If this is your first time setting up, or you've rebuilt the images, continue to `Creating the containers`. Otherwise, you can follow `Running the containers`.
 If you changed the names above, remember to use the changed names in these commands.
+
+#### Running the containers
+If you've previously created the containers and haven't rebuilt the images, you can simply start the containers:
+```
+docker start relectric-db relectric-api
+```
+
+#### Creating the containers
+Containers will need to be created after building the images or after being removed.
+
+If you've previously created the containers and they still exist (e.g. you've just rebuilt the image), you'll first need to remove the old containers:
+```
+docker rm relectric-db relectric-api
+```
 
 The DB should run before the API:
 ```
-docker run --net=relectric -v relectric:/var/lib/mongodb relectric-db
+docker run --net=relectric -v relectric:/var/lib/mongodb --name relectric-db -d relectric-db
 ```
 
 Then the API can be run:
 ```
-docker run --net=relectric -p 8000:8000 relectric-api
+docker run --net=relectric -p 8000:8000 --name relectric-api -d relectric-api
 ```
 
 `8000:8000` can be substituted with `x:8000`, where `x` is the local port you want to connect to the API with.
