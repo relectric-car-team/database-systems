@@ -5,7 +5,6 @@ services:
     build:
       dockerfile: Python.Dockerfile
       context: .
-    network_mode: relectric
     ports:
       - 8000:8000
   db:
@@ -13,7 +12,6 @@ services:
     build:
       dockerfile: Mongo.Dockerfile
       context: .
-    network_mode: relectric
     volumes:
       - relectric:/var/lib/mongodb
 
