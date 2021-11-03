@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  api:
+    container_name: relectric-api
+    build:
+      dockerfile: Python.Dockerfile
+      context: .
+    network_mode: relectric
+    ports:
+      - 8000:8000
+  db:
+    container_name: relectric-db
+    build:
+      dockerfile: Mongo.Dockerfile
+      context: .
+    network_mode: relectric
+    volumes:
+      - relectric:/var/lib/mongodb
+
+volumes:
+  relectric:
+    external: true
