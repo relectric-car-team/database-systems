@@ -8,69 +8,32 @@ The API and DB each run in their own Docker container.
 ## Linux/Mac
 This guide assumes you have Docker installed previously.
 The commands used assume that Docker has sufficient permission to run the commands without the use of `sudo`.
+The commands assume your terminal is in the project root directory.
 
 
-### Initial Setup
-These commands need to be run only once.
-`relectric` can be substituted for any alternative name you choose, but will also need to be substituted in later commands.
+### Building and running the containers
+Docker compose will handle everything as described in `docker-compose.yml`.
 
-First we create a network that our containers will use to connect:
-```
-docker network create relectric
-```
+These commands should be run after any changes in order to apply the changes.
 
-Then we create a local volume to persist the data from the database:
+Before the containers can run, we must build the images:
 ```
-docker volume create relectric
+docker compose build
 ```
 
-
-### Building the images
-Images will need to be built after any changes.
-The names can again be substituted if desired.
-
-To build the API image, simply run:
+Then we can start the containers:
 ```
-docker build -f Python.Dockerfile -t relectric-api .
+docker compose up -d
 ```
-
-And the DB image:
-```
-docker build -f Mongo.Dockerfile -t relectric-db .
-```
-
-
-### Creating or Running the containers
-If this is your first time setting up, or you've rebuilt the images, continue to `Creating the containers`. Otherwise, you can follow `Running the containers`.
-If you changed the names above, remember to use the changed names in these commands.
-
-#### Running the containers
-If you've previously created the containers and haven't rebuilt the images, you can simply start the containers:
-```
-docker start relectric-db relectric-api
-```
-
-#### Creating the containers
-Containers will need to be created after building the images or after being removed.
-
-If you've previously created the containers and they still exist (e.g. you've just rebuilt the image), you'll first need to remove the old containers:
-```
-docker rm relectric-db relectric-api
-```
-
-The DB should run before the API:
-```
-docker run --net=relectric -v relectric:/var/lib/mongodb --name relectric-db -d relectric-db
-```
-
-Then the API can be run:
-```
-docker run --net=relectric -p 8000:8000 --name relectric-api -d relectric-api
-```
-
-`8000:8000` can be substituted with `x:8000`, where `x` is the local port you want to connect to the API with.
 
 
 ### Connecting to the API
-The API will now be available at `localhost:8000` or an alternative port as described above.
+The API will now be available at `localhost:8000`
 To view the auto-docs, navigate to `localhost:8000/docs` where you can view and test the routes directly.
+
+
+### Stopping the containers
+To stop the containers you can run:
+```
+docker compose down
+```
