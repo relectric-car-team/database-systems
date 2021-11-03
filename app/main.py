@@ -41,10 +41,19 @@ async def read_log(log_id: str):
 @app.put("/{log_id}", response_model=LogModel)
 async def update_log(log_id: str, log: UpdateLogModel = Body(...)):
     """Update a log in the database."""
-    log = jsonable_encoder(log)
-    if (log := await db.logs.find_one({"_id": log_id})) is not None:
-        updated_log = await db.logs.update_one({"_id": log_id}, {"$set": log})
-        return updated_log
+    log = log.dict(exclude_none=True)
+
+    # Update log if at least 1 value was provided
+    if len(log) >= 1:
+        update_result = await db.logs.update_one({"_id": log_id}, {"$set": log})
+        if update_result.modified_count == 1:
+            if (updated_log := await db.logs.find_one({"_id": log_id})) is not None:
+                return updated_log
+
+    # Default to existing log if nothing was updated
+    if (existing_log := await db.logs.find_one({"_id": log_id})) is not None:
+        return existing_log
+
     return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Log not found")
 
 
@@ -54,4 +63,4 @@ async def delete_log(log_id: str):
     delete_result = await db.logs.delete_one({"_id": log_id})
     if delete_result.deleted_count == 0:
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Log not found")
-    return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
+    return JSONResponse(status_code=status.HTTP_200_OK, content={"deleted": True})
