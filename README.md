@@ -26,7 +26,7 @@ docker volume create relectric
 
 
 ### Building the images
-Images will need to be built after any change to the Dockerfile.
+Images will need to be built after any changes.
 The names can again be substituted if desired.
 
 To build the API image, simply run:
