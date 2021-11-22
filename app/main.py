@@ -1,4 +1,5 @@
 import os
+from threading import Thread
 
 import dotenv
 import motor.motor_asyncio
@@ -6,6 +7,7 @@ from fastapi import Body, FastAPI, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
+from app.connections import DBNet
 from app.models import LogModel, UpdateLogModel
 
 dotenv.load_dotenv()
@@ -13,6 +15,13 @@ dotenv.load_dotenv()
 app = FastAPI()
 client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URI"])
 db = client.relectric  # Database name
+
+_database_address = "tcp://systems:8002"
+
+db_net = DBNet(_database_address)
+socket = Thread(target=db_net)
+socket.start()
+socket.join()
 
 
 @app.post("/", response_model=LogModel)
