@@ -7,6 +7,7 @@ services:
       context: .
     ports:
       - 8000:8000
+
   db:
     container_name: relectric-db
     build:
@@ -14,6 +15,12 @@ services:
       context: .
     volumes:
       - relectric:/var/lib/mongodb
+
+  systems:
+    container_name: relectric-systems
+    build:
+      dockerfile: Dockerfile
+      context: ../systems/
 
 volumes:
   relectric:

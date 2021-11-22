@@ -6,6 +6,7 @@ ADD poetry.lock /
 ADD pyproject.toml /
 
 EXPOSE 8000
+EXPOSE 8002
 
 ENV PYTHONPATH = /
 
