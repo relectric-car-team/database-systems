@@ -28,6 +28,7 @@ class DBNet:
         while True:
             incoming_message = self.socket.recv_json()
             logger.debug(f"{self.identity} received: {incoming_message}")
+            # Add message processing
 
     def connect_to_server(self) -> bool:
         self.socket.connect(self.core_frontend_address)

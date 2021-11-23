@@ -17,11 +17,14 @@ client = motor.motor_asyncio.AsyncIOMotorClient(os.environ["MONGODB_URI"])
 db = client.relectric  # Database name
 
 _database_address = "tcp://systems:8002"
-
 db_net = DBNet(_database_address)
 socket = Thread(target=db_net)
 socket.start()
-socket.join()
+
+
+@app.on_event("shutdown")
+def shutdown():
+    socket.join()
 
 
 @app.post("/", response_model=LogModel)
