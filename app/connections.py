@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Literal, TypedDict
-
 import zmq
 from loguru import logger
 
@@ -28,7 +26,7 @@ class DBNet:
             return
 
         while True:
-            incoming_message: Message = self.socket.recv_json()
+            incoming_message = self.socket.recv_json()
             logger.debug(f"{self.identity} received: {incoming_message}")
 
     def connect_to_server(self) -> bool:
@@ -52,18 +50,3 @@ class DBNet:
             self.run()
         except KeyboardInterrupt:
             self.socket.close()
-
-
-# Copied from systems
-class Message(TypedDict):
-    controller: Literal[
-        "BackupController",
-        "BatteryController",
-        "ClimateController",
-        "MotorController",
-        "SensorController",
-    ]
-    data: dict
-    sender: list[bytes] | None
-    # str before parsed to JSON
-    destinations: list[list[bytes]] | list[list[str]]
