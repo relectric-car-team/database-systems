@@ -11,6 +11,10 @@ The commands used assume that Docker has sufficient permission to run the comman
 The commands assume your terminal is in the project root directory.
 
 
+### Requirements
+Systems repo must be installed and located in the same directory as this repo.
+
+
 ### Building and running the containers
 Docker compose will handle everything as described in `docker-compose.yml`.
 
