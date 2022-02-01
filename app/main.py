@@ -69,10 +69,16 @@ async def delete_log(log_id: str):
 
 
 # Geo Logs
-@app.post("/gps", response_model=GPSLogModel)
-async def create_log(gps_log: GPSLogModel = Body(...)):
-    """Create a new log in the database."""
+@app.post("/gps/", response_model=GPSLogModel)
+async def create_gps_log(gps_log: GPSLogModel = Body(...)):
+    """Create a new gps log in the database."""
     gps_log = jsonable_encoder(gps_log)
     new_log = await db.gps_logs.insert_one(gps_log)
     created_log = await db.gps_logs.find_one({"_id": new_log.inserted_id})
     return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_log)
+
+
+@app.get("/gps/", response_model=list[GPSLogModel])
+async def read_gps_logs():
+    """Read all gps logs from the database."""
+    return await db.gps_logs.find().to_list(None)
