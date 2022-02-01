@@ -66,7 +66,22 @@ class GPSLogModel(BaseModel):
     id: PyObjectId = Field(
         default_factory=PyObjectId, alias="_id"
     )  # Default to PyObjectId
+    sentence: str = Field(...)
     timestamp: datetime = Field(...)
     latitude: float = Field(...)
     longitude: float = Field(...)
     altitude: float = Field(...)
+
+    class Config:
+        allow_population_by_field_name = True
+        arbitrary_types_allowed = True
+        json_encoders = {ObjectId: str}
+        schema_extra = {
+            "example": {
+                "sentence": "GPGGA",
+                "timestamp": 1642556325,
+                "latitude": 40.730610,
+                "longitude": -73.935242,
+                "altitude": 1244.1,
+            }
+        }
