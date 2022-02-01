@@ -6,7 +6,7 @@ from fastapi import Body, FastAPI, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from app.models import LogModel, UpdateLogModel
+from app.models import GPSLogModel, LogModel, UpdateLogModel
 
 dotenv.load_dotenv()
 
@@ -62,5 +62,17 @@ async def delete_log(log_id: str):
     """Delete a log from the database."""
     delete_result = await db.logs.delete_one({"_id": log_id})
     if delete_result.deleted_count == 0:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Log not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Log not found"
+        )
     return JSONResponse(status_code=status.HTTP_200_OK, content={"deleted": True})
+
+
+# Geo Logs
+@app.post("/gps", response_model=GPSLogModel)
+async def create_log(gps_log: GPSLogModel = Body(...)):
+    """Create a new log in the database."""
+    gps_log = jsonable_encoder(gps_log)
+    new_log = await db.gps_logs.insert_one(gps_log)
+    created_log = await db.gps_logs.find_one({"_id": new_log.inserted_id})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_log)
