@@ -25,7 +25,9 @@ class PyObjectId(ObjectId):
 
 class LogModel(BaseModel):
     # Alias id to _id so we can refer to it by id and have Mongo handle it correctly
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")  # Default to PyObjectId
+    id: PyObjectId = Field(
+        default_factory=PyObjectId, alias="_id"
+    )  # Default to PyObjectId
     severity: str = Field(...)
     message: str = Field(...)
     timestamp: datetime = Field(...)
@@ -58,3 +60,13 @@ class UpdateLogModel(BaseModel):
                 "timestamp": datetime.now(),
             }
         }
+
+
+class GPSLogModel(BaseModel):
+    id: PyObjectId = Field(
+        default_factory=PyObjectId, alias="_id"
+    )  # Default to PyObjectId
+    timestamp: datetime = Field(...)
+    latitude: float = Field(...)
+    longitude: float = Field(...)
+    altitude: float = Field(...)
